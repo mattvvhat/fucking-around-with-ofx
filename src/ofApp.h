@@ -1,7 +1,11 @@
 #pragma once
 
+#include <list>
+
 #include "ofMain.h"
 #include "vvBuilding.h"
+#include "GibberishMesh.h"
+#include "Cluster.h"
 
 class ofApp : public ofBaseApp{
     
@@ -14,9 +18,19 @@ protected:
     } view;
     
     s::vvBuilding building;
+    std::list<s::vvBuilding> buildings;
+    
     ofBoxPrimitive box;
+    
     ofLight pointLight;
+    ofLight directionalLight;
+    ofLight orangeDirectionalLight;
+    ofLight cyanDirectionalLight;
+    ofLight ambientLight;
     ofMaterial material;
+    
+    vv::GibberishMesh mesh;
+    vv::Cluster cluster;
 
 public:
 	void setup();
@@ -32,4 +46,5 @@ public:
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
+    void setLightOri(ofLight &light, ofVec3f rot);
 };

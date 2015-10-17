@@ -1,8 +1,11 @@
 #pragma once
 
-#include "ofMain.h"
+#include <list>
 
+#include "ofMain.h"
 #include "vvPiece.h"
+
+#define MAX_PIECES 100
 
 namespace s {
 
@@ -12,13 +15,19 @@ private:
     float t;
     
     // Pieces
-    vv::Piece pieces[6];
+    std::list<vv::Piece> pieces_list;
     ofVec3f pieceSize;
     
 public:
     vvBuilding():t(0) {
-        for (int i=0; i<6; i++) {
-            pieces[i].setSize(ofVec3f(1, 1, 1));
+        ofSeedRandom();
+        
+        for (int i=0; i<MAX_PIECES; i++) {
+            vv::Piece p;
+            p.setSize(ofVec3f(1, 1, 1));
+            p.setOffsetAngle(-M_PI/2.);
+            p.setTime(-i/1.5);
+            pieces_list.push_back(p);
         }
     }
     
@@ -27,29 +36,30 @@ public:
     
     void setPieceSize(const ofVec3f & dims) {
         pieceSize = dims;
-        for (int i=0; i<6; i++) {
-            pieces[i].setSize(pieceSize);
+        for (auto it=pieces_list.begin(); it != pieces_list.end(); ++it) {
+            it->setSize(pieceSize);
         }
     }
     
     void setPosition(const ofVec3f & pos) {
-        for (int i=0; i<6; i++) {
+        int i=0;
+        for (auto it=pieces_list.begin(); it != pieces_list.end(); ++it, ++i) {
             float t = 1.1*(-.5 + i);
             ofVec3f piece_pos = pos;
-            piece_pos[1] = pieceSize[1] * t;
-            pieces[i].setPosition(piece_pos);
+            piece_pos[1] += pieceSize[1] * t;
+            it->setPosition(piece_pos);
         }
     }
     
     void update() {
-        for (int i=0; i<6; i++) {
-            pieces[i].update();
+        for (auto it=pieces_list.begin(); it != pieces_list.end(); ++it) {
+            it->update();
         }
     }
     
     void draw() {
-        for (int i=0; i<6; i++) {
-            pieces[i].draw();
+        for (auto it=pieces_list.begin(); it != pieces_list.end(); ++it) {
+            it->draw();
         }
     }
 };
